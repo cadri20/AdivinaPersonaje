@@ -1,7 +1,111 @@
 ﻿@page "/"
+@page "/{Id}"
 
-<PageTitle>Home</PageTitle>
+@using AdivinaPersonaje.Model
+@using AdivinaPersonaje.Services
+@using AdivinaPersonaje.Components
 
-<h1>Hello, world!</h1>
+@inject IJSRuntime JsRuntime
 
-Welcome to your new app.
+<PageTitle>Adivina el personaje</PageTitle>
+
+<div class="text-3xl font-bold flex flex-row w-100 justify-center m-6">
+    <h1>ADIVINA EL PERSONAJE</h1>
+</div>
+
+<div class="flex flex-row w-full gap-5">
+    <aside class="flex flex-col items-center w-1/3 p-3">
+        <h1 class=font-bold>Instrucciones</h1>
+        <p>
+            Lee las pistas e ingresa el nombre del personaje del cual crees se está hablando, 
+            si respondes mal aparecera otra pista, al menos que ya no queden más y pierdas.
+        </p>
+    </aside>
+    <main class="flex flex-col items-center w-1/3 gap-3">
+        
+            <input class="text-black h-12 w-full text-center" @bind="Respuesta" style="background-color: @RespuestaColor" @oninput="HandleInput" type="text" @onkeypress="@OnKeyPress" placeholder="Ingresa el nombre del personaje" />
+            <h1 class="text-2xl font-bold">Pistas:</h1>
+        
+            @foreach (var pista in Pistas)
+            {
+                <Pista Texto="@pista"/>
+            }
+        
+    </main>
+    <aside class="flex flex-col items-center w-1/3">
+        <h1 class="font-bold">Pistas restantes</h1>
+        <p>@PistasRestantes</p>
+    </aside>
+
+</div>
+
+@code{
+    public string Respuesta { get; set; } = "";
+    public List<string> Pistas { get; set; } = new();
+    public int PistasRestantes { get; set; }
+    public string RespuestaColor { get; set; } = "white";
+
+    [Parameter]
+    public string Id { get; set; } = "1";
+    [Inject]
+    public IAdivinanzasService AdivinanzasService { get; set; } = default!;
+
+    private Adivinanza? adivinanza;
+    private int indiceSiguientePista;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine(Id);
+        adivinanza = await AdivinanzasService.GetAdivinanza(int.Parse(Id));
+        GetSiguientePista();
+        indiceSiguientePista = 1;
+        PistasRestantes = adivinanza.Pistas.Count - indiceSiguientePista;
+    }
+
+    public void HandleInput(ChangeEventArgs e)
+    {
+        Respuesta = e.Value.ToString();
+    }
+
+    public void GetSiguientePista(){
+        if(adivinanza != null){
+            Pistas.Add(adivinanza.Pistas[indiceSiguientePista]);
+            indiceSiguientePista++;
+            PistasRestantes = adivinanza.Pistas.Count - indiceSiguientePista;
+        }
+    }
+
+    public void EnviarRespuesta(){
+        if(adivinanza != null){
+            if(adivinanza.EsCorrecta(Respuesta)){
+                OnGanar();
+            }else{
+                if(indiceSiguientePista < adivinanza.Pistas.Count){
+                    GetSiguientePista();
+                    Respuesta = "";
+                }else{
+                    OnPerder();
+                }
+            }
+        }
+    }
+
+    public void OnKeyPress(KeyboardEventArgs e){
+        if(e.Key == "Enter"){
+            EnviarRespuesta();
+        }
+    }
+
+    public void OnGanar(){
+        RespuestaColor = "rgb(134 239 172)";
+        Pistas = adivinanza.Pistas;
+    }
+
+    public void OnPerder(){
+        RespuestaColor = "rgb(239 134 134)";
+        Respuesta = adivinanza.Respuestas[0];
+    }
+}
+
+
+

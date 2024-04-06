@@ -75,3 +75,24 @@
 code {
     color: #c02d76;
 }
+
+body {
+    background-color: #7F00FF !important;
+    color: white;
+}
+
+.pista {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 3px;
+    background-color: #3B82F6;
+    border-radius: 10px;
+    border: 1px solid white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    width: 100%;
+    min-width: 70%;
+    height: 70px;
+    transition: all 0.3s ease;
+}
