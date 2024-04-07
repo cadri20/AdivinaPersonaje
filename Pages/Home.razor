@@ -1,4 +1,5 @@
 ﻿@page "/"
+@page "/{Id:int}"
 
 
 @using AdivinaPersonaje.Model
@@ -46,7 +47,7 @@
     public string RespuestaColor { get; set; } = "white";
 
     [Parameter]
-    public string Id { get; set; } = "1";
+    public int Id { get; set; } = 1;
     [Inject]
     public IAdivinanzasService AdivinanzasService { get; set; } = default!;
 
@@ -56,7 +57,10 @@
     protected override async Task OnInitializedAsync()
     {
         Console.WriteLine(Id);
-        adivinanza = await AdivinanzasService.GetAdivinanza(int.Parse(Id));
+        adivinanza = await AdivinanzasService.GetAdivinanza(Id);
+        if(adivinanza == null){
+            return;
+        }
         GetSiguientePista();
         indiceSiguientePista = 1;
         PistasRestantes = adivinanza.Pistas.Count - indiceSiguientePista;

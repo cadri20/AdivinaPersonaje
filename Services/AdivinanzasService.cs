@@ -20,6 +20,8 @@ namespace AdivinaPersonaje.Services
                 adivinanzas = await _httpClient.GetFromJsonAsync<List<Adivinanza>>("adivinanzas.json");
             }
 
+            Console.WriteLine($"Adivinanzas: {adivinanzas.Count}");
+
             return adivinanzas?.Find(a => a.Id == id);
         }
 

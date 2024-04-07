@@ -10,5 +10,17 @@
       "Es streamer",
       "Es de Girona"
     ]
+  },
+  {
+    "id": 2,
+    "respuestas": [ "Cristiano Ronaldo", "CR7" ],
+    "pistas": [
+      "Juega futbol",
+      "Es de Portugal",
+      "Jugo en el Real Madrid",
+      "Jugo en el Manchester United",
+      "Jugo en la Juventus",
+      "Es el maximo goleador de la Champions League"
+    ]
   }
 ]
