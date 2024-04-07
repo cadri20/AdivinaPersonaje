@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "respuestas": [ "Poloteli", "Pol Marco" ],
+    "pistas": [
+      "Juega futbol",
+      "Es de Espana",
+      "Jugo en la Kings League",
+      "Jugo en el Rayo de Barcelona",
+      "Es streamer",
+      "Es de Girona"
+    ]
+  }
+]
